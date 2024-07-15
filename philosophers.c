@@ -6,16 +6,15 @@
 /*   By: moer-ret <moer-ret@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 20:34:35 by moer-ret          #+#    #+#             */
-/*   Updated: 2024/07/12 20:40:03 by moer-ret         ###   ########.fr       */
+/*   Updated: 2024/07/15 18:45:51 by moer-ret         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-int    main(int argc, char **argv)
+
+int    main(int ac, char **av)
 {
-    (void)argc;
-    (void)argv;
-    printf("Hello, philo!\n");
-    return (0);
+	parsing(ac, av);
+	return (0);
 }

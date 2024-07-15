@@ -1,7 +1,7 @@
 NAME = philo
 CC = cc
 CFLAGS = -Wall -Werror -Wextra #-g -fsanitize=address 
-CFILES = philosophers.c
+CFILES = philosophers.c parsing.c
 OFILSE = $(CFILES:.c=.o)
 
 
@@ -21,5 +21,5 @@ re: fclean all
 push :
 	@make fclean
 	@git add .
-	@git commit -m "START philo !!"
+	@git commit -m "START parsing"
 	@git push -f

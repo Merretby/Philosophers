@@ -6,7 +6,7 @@
 /*   By: moer-ret <moer-ret@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/15 18:43:57 by moer-ret          #+#    #+#             */
-/*   Updated: 2024/07/15 18:44:42 by moer-ret         ###   ########.fr       */
+/*   Updated: 2024/07/16 13:37:49 by moer-ret         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,11 +55,11 @@ int	ft_num(char *s)
 	int	i;
 
 	i = 0;
-	if (s[0] == '+')
+	if (s[0] == '+' || s[0] == ' ')
 		i++;
 	while (s[i])
 	{
-		if (!ft_isdigit(s[i]))
+		if (!ft_isdigit(s[i]) && s[i] != ' ')
 			return (0);
 		i++;
 	}
@@ -83,6 +83,20 @@ void	ft_putendl_fd(char *s, int fd)
 	exit (1);
 }
 
+int	check_speac(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i] && str[i] != '\t')
+	{
+		if (str[i] != ' ')
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
 void	parsing(int ac, char **av)
 {
 	long	nb;
@@ -94,7 +108,8 @@ void	parsing(int ac, char **av)
 	while (av[i])
 	{
 		nb = ft_atoi(av[i]);
-		if (nb > INT_MAX || !ft_num(av[i]))
+		if (nb > INT_MAX || !ft_num(av[i]) \
+			|| check_speac(av[i]))
 			ft_putendl_fd("ERROR", 2);
 		i++;
 	}

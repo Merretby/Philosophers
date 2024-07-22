@@ -1,7 +1,7 @@
 NAME = philo
 CC = cc
-CFLAGS = -Wall -Werror -Wextra #-g -fsanitize=address 
-CFILES = philosophers.c parsing.c
+CFLAGS = -Wall -Werror -Wextra #-g -fsanitize=address -pthread -I.
+CFILES = philosophers.c parsing.c init.c
 OFILSE = $(CFILES:.c=.o)
 
 

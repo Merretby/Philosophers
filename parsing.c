@@ -6,7 +6,7 @@
 /*   By: moer-ret <moer-ret@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/15 18:43:57 by moer-ret          #+#    #+#             */
-/*   Updated: 2024/07/16 13:37:49 by moer-ret         ###   ########.fr       */
+/*   Updated: 2024/07/16 17:48:51 by moer-ret         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ int	ft_isdigit(int c)
 	else
 		return (0);
 }
-
 
 long	ft_atoi(const char *str)
 {
@@ -72,13 +71,13 @@ void	ft_putendl_fd(char *s, int fd)
 
 	if (s != NULL)
 	{
-	    i = 0;
+		i = 0;
 		while (s[i])
 		{
 			write(fd, &s[i], 1);
 			i++;
 		}
-		write(fd, "\n" , 1);
+		write(fd, "\n", 1);
 	}
 	exit (1);
 }
@@ -105,6 +104,11 @@ void	parsing(int ac, char **av)
 	i = 1;
 	if (ac != 5 && ac != 6)
 		ft_putendl_fd("U NEDD 5 or 6 ARGUMENT", 2);
+	// if (ft_atoi(av[1]) == 1)
+	// {
+	// 	printf ("1: is taking the fork\n");
+	// 	printf ("1: is dead\n");		
+	// }
 	while (av[i])
 	{
 		nb = ft_atoi(av[i]);

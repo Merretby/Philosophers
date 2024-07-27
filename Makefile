@@ -21,5 +21,5 @@ re: fclean all
 push :
 	@make fclean
 	@git add .
-	@git commit -m "START parsing"
+	@git commit -m "news"
 	@git push -f

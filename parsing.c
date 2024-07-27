@@ -6,7 +6,7 @@
 /*   By: moer-ret <moer-ret@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/15 18:43:57 by moer-ret          #+#    #+#             */
-/*   Updated: 2024/07/16 17:48:51 by moer-ret         ###   ########.fr       */
+/*   Updated: 2024/07/27 12:25:21 by moer-ret         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,11 +104,6 @@ void	parsing(int ac, char **av)
 	i = 1;
 	if (ac != 5 && ac != 6)
 		ft_putendl_fd("U NEDD 5 or 6 ARGUMENT", 2);
-	// if (ft_atoi(av[1]) == 1)
-	// {
-	// 	printf ("1: is taking the fork\n");
-	// 	printf ("1: is dead\n");		
-	// }
 	while (av[i])
 	{
 		nb = ft_atoi(av[i]);

@@ -6,7 +6,7 @@
 /*   By: moer-ret <moer-ret@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/20 18:19:25 by moer-ret          #+#    #+#             */
-/*   Updated: 2024/07/29 18:17:42 by moer-ret         ###   ########.fr       */
+/*   Updated: 2024/07/29 19:23:32 by moer-ret         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ void	take_fork_and_eat(t_philo *philo)
 void	*diner(void *data_of_philo)
 {
 	t_philo	*philo;
+
 
 	philo = (t_philo *)data_of_philo;
 	if (philo->id % 2 == 0)
@@ -84,9 +85,8 @@ void	init_philo2(t_data *data)
 		data->philo[i].d_philo = data;
 		pthread_create(&data->philo[i].th, NULL, &diner, &data->philo[i]);
 		i++;
-		usleep(60);
+		ft_usleep(60);
 	}
-	i = 0;
 	while (i < data->n_of_philo)
 	{
 		pthread_join(data->philo[i].th, NULL);
@@ -119,6 +119,7 @@ int	its_time_to_die(t_philo philo)
 void	the_tabel(t_data *data)
 {
 	int	i;
+
 
 	init_philo2(data);
 	i = 0;

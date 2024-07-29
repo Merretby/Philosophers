@@ -6,7 +6,7 @@
 /*   By: user <user@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/20 18:19:25 by moer-ret          #+#    #+#             */
-/*   Updated: 2024/07/29 16:15:08 by user             ###   ########.fr       */
+/*   Updated: 2024/07/29 16:40:45 by user             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,7 +117,7 @@ int	timing(t_data *data)
 
 int	its_time_to_die(t_philo philo)
 {
-	if (((timer() - philo.d_philo->start_time) - philo.tmp) > philo.d_philo->time_to_die)
+	if (((timer() - philo.d_philo->start_time) - philo.tmp) >= philo.d_philo->time_to_die)
 		return (0);
 	return (1);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philosophers.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: moer-ret <moer-ret@student.42.fr>          +#+  +:+       +#+        */
+/*   By: user <user@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 20:38:54 by moer-ret          #+#    #+#             */
-/*   Updated: 2024/07/27 12:29:34 by moer-ret         ###   ########.fr       */
+/*   Updated: 2024/07/29 15:34:32 by user             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,6 @@ void		parsing(int ac, char **av);
 //init
 void		init_data(int ac, char **av, t_data *data);
 long int	timer(void);
-void		ft_usleep(long int milliseconds);
+void		ft_usleep(int time);
 
 #endif

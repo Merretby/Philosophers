@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: user <user@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: moer-ret <moer-ret@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/20 18:19:25 by moer-ret          #+#    #+#             */
-/*   Updated: 2024/07/29 16:40:45 by user             ###   ########.fr       */
+/*   Updated: 2024/07/29 16:45:32 by moer-ret         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,39 +14,18 @@
 
 void	take_fork_and_eat(t_philo *philo)
 {
-	// pthread_mutex_lock(&philo->d_philo->forks[philo->left_fork]);
-	// pthread_mutex_lock(philo->d_philo->msg);
-	// printf("%ld ms %d has taken a fork\n", 
-	// 	timer() - philo->d_philo->start_time, philo->id);
-	// pthread_mutex_unlock(philo->d_philo->msg);
-	// pthread_mutex_lock(&philo->d_philo->forks[philo->right_fork]);
-	// pthread_mutex_lock(philo->d_philo->msg);
-	// printf("%ld ms %d has taken a fork\n", 
-	// 	timer() - philo->d_philo->start_time, philo->id);
-	// pthread_mutex_unlock(philo->d_philo->msg);
-	// pthread_mutex_lock(philo->d_philo->msg);
-	// printf("%ld ms %d is eating\n", 
-	// 	timer() - philo->d_philo->start_time, philo->id);
-	// philo->tmp = timer() - philo->d_philo->start_time;
-	// pthread_mutex_lock(philo->d_philo->tour);
-	// if (philo->d_philo->n_of_meals != -1)
-	// 	philo->d_philo->stop += 1;
-	// pthread_mutex_unlock(philo->d_philo->tour);
-	// pthread_mutex_unlock(philo->d_philo->msg);
-	// ft_usleep(philo->d_philo->time_to_eat);
-	//
 	pthread_mutex_lock(&philo->d_philo->forks[philo->left_fork]);
 	pthread_mutex_lock(philo->d_philo->msg);
-	printf("%ld ms philo %d has taken a fork\n",
+	printf("%ld philo %d has taken a fork\n",
 		timer() - philo->d_philo->start_time, philo->id);
 	pthread_mutex_unlock(philo->d_philo->msg);;
 	pthread_mutex_lock(&philo->d_philo->forks[philo->right_fork]);
 	pthread_mutex_lock(philo->d_philo->msg);
-	printf("%ld ms philo %d has taken a fork\n",
+	printf("%ld philo %d has taken a fork\n",
 		timer() - philo->d_philo->start_time, philo->id);
 	pthread_mutex_unlock(philo->d_philo->msg);
 	pthread_mutex_lock(philo->d_philo->msg);
-	printf("%ld ms philo %d is eating\n",
+	printf("%ld philo %d is eating\n",
 		timer() - philo->d_philo->start_time, philo->id);
 	philo->tmp = timer() - philo->d_philo->start_time;
 	pthread_mutex_lock(philo->d_philo->tour);
@@ -70,12 +49,12 @@ void	*diner(void *data_of_philo)
 		pthread_mutex_unlock(&philo->d_philo->forks[philo->left_fork]);
 		pthread_mutex_unlock(&philo->d_philo->forks[philo->right_fork]);
 		pthread_mutex_lock(philo->d_philo->msg);
-		printf("%ld ms %d is sleeping\n",\
+		printf("%ld philo %d is sleeping\n",\
 			timer() - philo->d_philo->start_time, philo->id);
 		pthread_mutex_unlock(philo->d_philo->msg);
 		ft_usleep(philo->d_philo->time_to_sleep);
 		pthread_mutex_lock(philo->d_philo->msg);
-		printf("%ld ms %d is thinking\n",\
+		printf("%ld philo %d is thinking\n",\
 			timer() - philo->d_philo->start_time, philo->id);
 		pthread_mutex_unlock(philo->d_philo->msg);
 	}
@@ -125,7 +104,7 @@ int	its_time_to_die(t_philo philo)
 void	the_tabel(t_data *data)
 {
 	int	i;
-	
+
 	init_philo2(data);
 	i = 0;
 	while (1)
@@ -135,7 +114,7 @@ void	the_tabel(t_data *data)
 		if (!its_time_to_die(data->philo[i]))
 		{
 			pthread_mutex_lock(data->msg);
-			printf("%ld ms %d died\n", timer() - data->start_time, data->philo[i].id);
+			printf("%ld philo %d died\n", timer() - data->start_time, data->philo[i].id);
 			return ;
 		}
 		i++;

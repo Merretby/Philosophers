@@ -6,7 +6,7 @@
 /*   By: moer-ret <moer-ret@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 20:34:35 by moer-ret          #+#    #+#             */
-/*   Updated: 2024/07/27 13:26:58 by moer-ret         ###   ########.fr       */
+/*   Updated: 2024/07/29 13:38:48 by moer-ret         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,22 @@ void	ft_usleep(long int milliseconds)
 	while ((timer() - start) < milliseconds)
 		usleep(60);
 }
+
+// void	destroy(t_data *data)
+// {
+// 	int	i;
+
+// 	i = 0;
+// 	while (i < data->n_of_philo)
+// 	{
+// 		pthread_mutex_destroy(&data->forks[i]);
+// 		i++;
+// 	}
+// 	pthread_mutex_destroy(data->msg);
+// 	pthread_mutex_destroy(data->tour);
+// 	// free(data->philo);
+// 	// free(data->forks);
+// }
 // void test()
 // {
 	// long int start;
@@ -84,6 +100,7 @@ int	main(int ac, char **av)
 	// test();
 	parsing(ac, av);
 	init_data(ac, av, &data);
+	// destroy(&data);
 	// start(&data);
 	return (0);
 }

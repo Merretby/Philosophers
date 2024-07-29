@@ -6,7 +6,7 @@
 /*   By: moer-ret <moer-ret@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/20 18:19:25 by moer-ret          #+#    #+#             */
-/*   Updated: 2024/07/27 15:28:42 by moer-ret         ###   ########.fr       */
+/*   Updated: 2024/07/27 18:07:14 by moer-ret         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,6 @@ void	take_fork_and_eat(t_philo *philo)
 	pthread_mutex_unlock(philo->d_philo->tour);
 	pthread_mutex_unlock(philo->d_philo->msg);
 	ft_usleep(philo->d_philo->time_to_eat);
-	pthread_mutex_unlock(&philo->d_philo->forks[philo->left_fork]);
-	pthread_mutex_unlock(&philo->d_philo->forks[philo->right_fork]);
 }
 
 void	*diner(void *data_of_philo)
@@ -41,10 +39,12 @@ void	*diner(void *data_of_philo)
 
 	philo = (t_philo *)data_of_philo;
 	if (philo->id % 2 == 0)
-		usleep(100);
+		usleep(60);
 	while (1)
 	{
 		take_fork_and_eat(philo);
+		pthread_mutex_unlock(&philo->d_philo->forks[philo->left_fork]);
+		pthread_mutex_unlock(&philo->d_philo->forks[philo->right_fork]);
 		pthread_mutex_lock(philo->d_philo->msg);
 		printf("%ld ms %d is sleeping\n", timer() - philo->d_philo->start_time, philo->id);
 		pthread_mutex_unlock(philo->d_philo->msg);
@@ -128,13 +128,18 @@ void	init_philo(t_data *data)
 		if (i == data->n_of_philo)
 			i = 0;
 	}
+	i = 0;
+	// while (i < data->n_of_philo)
+	// {
+	// 	pthread_mutex_destroy(&data->forks[i]);
+	// 	i++;
+	// }
 }
 
 void	init_data(int ac, char **av, t_data *data)
 {
-	int	i;
+	// int	i;
 
-	i = 0;
 	data = malloc(sizeof(t_data));
 	data->n_of_philo = ft_atoi(av[1]);
 	data->time_to_die = ft_atoi(av[2]);
@@ -150,6 +155,4 @@ void	init_data(int ac, char **av, t_data *data)
 		data->n_of_meals = -1;
 	data->stop = 0;
 	init_philo(data);
-	free(data->philo);
-	free(data->forks);
 }

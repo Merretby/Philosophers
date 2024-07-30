@@ -3,63 +3,76 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: user <user@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: moer-ret <moer-ret@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/20 18:19:25 by moer-ret          #+#    #+#             */
-/*   Updated: 2024/07/30 14:40:25 by user             ###   ########.fr       */
+/*   Updated: 2024/07/30 19:24:22 by moer-ret         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
+void	ft_print(t_philo *philo, char *s)
+{
+	pthread_mutex_lock(philo->d_philo->msg);
+	if (philo->d_philo->dead == 1)
+	{
+		pthread_mutex_unlock(philo->d_philo->msg);
+		return ;
+	}
+	printf("%ld philo %d %s\n", timer() - philo->d_philo->start_time, philo->id, s);
+	pthread_mutex_unlock(philo->d_philo->msg);
+}
+
 void	take_fork_and_eat(t_philo *philo)
 {
 	pthread_mutex_lock(&philo->d_philo->forks[philo->left_fork]);
-	pthread_mutex_lock(philo->d_philo->msg);
-	printf("%ld philo %d has taken a fork\n",
-		timer() - philo->d_philo->start_time, philo->id);
-	pthread_mutex_unlock(philo->d_philo->msg);
+	ft_print(philo, "has taken a fork");
 	pthread_mutex_lock(&philo->d_philo->forks[philo->right_fork]);
-	pthread_mutex_lock(philo->d_philo->msg);
-	printf("%ld philo %d has taken a fork\n",
-		timer() - philo->d_philo->start_time, philo->id);
-	pthread_mutex_unlock(philo->d_philo->msg);
-	pthread_mutex_lock(philo->d_philo->msg);
-	printf("%ld philo %d is eating\n",
-		timer() - philo->d_philo->start_time, philo->id);
+	ft_print(philo, "has taken a fork");
+	ft_print(philo, "is eating");
 	philo->tmp = timer() - philo->d_philo->start_time;
 	pthread_mutex_lock(philo->d_philo->tour);
 	if (philo->d_philo->n_of_meals != -1)
 		philo->d_philo->stop += 1;
 	pthread_mutex_unlock(philo->d_philo->tour);
-	pthread_mutex_unlock(philo->d_philo->msg);
 	ft_usleep(philo->d_philo->time_to_eat);
+	pthread_mutex_unlock(&philo->d_philo->forks[philo->left_fork]);
+	pthread_mutex_unlock(&philo->d_philo->forks[philo->right_fork]);
+}
+
+void	take_fork_and_eat_odd(t_philo *philo)
+{
+	usleep(500);
+	pthread_mutex_lock(&philo->d_philo->forks[philo->right_fork]);
+	ft_print(philo, "has taken a fork");
+	pthread_mutex_lock(&philo->d_philo->forks[philo->left_fork]);
+	ft_print(philo, "has taken a fork");
+	ft_print(philo, "is eating");
+	philo->tmp = timer() - philo->d_philo->start_time;
+	pthread_mutex_lock(philo->d_philo->tour);
+	if (philo->d_philo->n_of_meals != -1)
+		philo->d_philo->stop += 1;
+	pthread_mutex_unlock(philo->d_philo->tour);
+	ft_usleep(philo->d_philo->time_to_eat);
+	pthread_mutex_unlock(&philo->d_philo->forks[philo->right_fork]);
+	pthread_mutex_unlock(&philo->d_philo->forks[philo->left_fork]);
 }
 
 void	*diner(void *data_of_philo)
 {
 	t_philo	*philo;
 
-
 	philo = (t_philo *)data_of_philo;
-	if (philo->id % 2 == 0)
-		usleep(60);
-	while (1)
+	while (philo->d_philo->dead == 0)
 	{
-		if (philo->d_philo->dead == 1)
-			return (NULL);
-		take_fork_and_eat(philo);
-		pthread_mutex_unlock(&philo->d_philo->forks[philo->left_fork]);
-		pthread_mutex_unlock(&philo->d_philo->forks[philo->right_fork]);
-		pthread_mutex_lock(philo->d_philo->msg);
-		printf("%ld philo %d is sleeping\n", \
-			timer() - philo->d_philo->start_time, philo->id);
-		pthread_mutex_unlock(philo->d_philo->msg);
+		if (philo->id % 2 == 0)
+			take_fork_and_eat(philo);
+		else
+			take_fork_and_eat_odd(philo);
+		ft_print(philo, "is sleeping");
 		ft_usleep(philo->d_philo->time_to_sleep);
-		pthread_mutex_lock(philo->d_philo->msg);
-		printf("%ld philo %d is thinking\n", \
-			timer() - philo->d_philo->start_time, philo->id);
-		pthread_mutex_unlock(philo->d_philo->msg);
+		ft_print(philo, "is thinking");
 	}
 	return (NULL);
 }
@@ -86,14 +99,13 @@ int	its_time_to_die(t_philo philo)
 	return (1);
 }
 
-
-void	*monitor(void *d)
+void	*the_tabel(void *d)
 {
 	int	i;
-
-	i = 0;
 	t_data	*data;
+
 	data = (t_data *)d;
+	i = 0;
 	while (1)
 	{
 		if (data->n_of_meals != -1 && timing(data) == 0)
@@ -103,21 +115,22 @@ void	*monitor(void *d)
 			pthread_mutex_lock(data->msg);
 			printf("%ld philo %d died\n", \
 				timer() - data->start_time, data->philo[i].id);
-			pthread_mutex_unlock(data->msg);
 			data->dead = 1;
+			pthread_mutex_unlock(data->msg);
 			return NULL;
 		}
 		i++;
 		if (i == data->n_of_philo)
 			i = 0;
 	}
+	return (NULL);
 }
 
 void	init_philo2(t_data *data)
 {
 	int	i;
-	pthread_t monitor_thread;
 
+	pthread_t 		mounitor;
 	i = 0;
 	data->start_time = timer();
 	while (i < data->n_of_philo)
@@ -135,20 +148,20 @@ void	init_philo2(t_data *data)
 		}
 		data->philo[i].start = timer();
 		data->philo[i].d_philo = data;
-		pthread_create(&data->philo[i].th, NULL, &diner, &data->philo[i]);
+		pthread_create(&data->philo[i].th, NULL, &diner, &data->philo[i]);\
 		i++;
-		ft_usleep(60);
+		usleep(60);
 	}
-	pthread_create(&monitor_thread, NULL, &monitor, data);
-    pthread_join(monitor_thread, NULL);
-	if (data->dead == 1)
-		return ;
+	pthread_create(&mounitor, NULL, &the_tabel, data);
 	i = 0;
 	while (i < data->n_of_philo)
 	{
-    	pthread_join(data->philo[i].th, NULL);
-    	i++;
+		if (pthread_join(data->philo[i].th, NULL) == -1)
+			ft_putendl_fd("error in pthread_join", 2);
+		i++;
 	}
+	if (pthread_join(mounitor, NULL) == -1)
+		ft_putendl_fd("error in pthread_join", 2);
 }
 
 void	init_philo(t_data *data)

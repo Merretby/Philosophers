@@ -21,5 +21,5 @@ re: fclean all
 push :
 	@make fclean
 	@git add .
-	@git commit -m "ma blanch"
+	@git commit -m "news"
 	@git push -f

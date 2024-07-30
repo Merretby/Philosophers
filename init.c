@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: moer-ret <moer-ret@student.42.fr>          +#+  +:+       +#+        */
+/*   By: user <user@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/20 18:19:25 by moer-ret          #+#    #+#             */
-/*   Updated: 2024/07/29 19:23:32 by moer-ret         ###   ########.fr       */
+/*   Updated: 2024/07/30 12:53:22 by user             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,38 +62,6 @@ void	*diner(void *data_of_philo)
 	return (NULL);
 }
 
-void	init_philo2(t_data *data)
-{
-	int	i;
-
-	i = 0;
-	data->start_time = timer();
-	while (i < data->n_of_philo)
-	{
-		data->philo[i].id = i + 1;
-		if (i == data->n_of_philo - 1)
-		{
-			data->philo[i].right_fork = i;
-			data->philo[i].left_fork = (i + 1) % data->n_of_philo;
-		}
-		else
-		{
-			data->philo[i].left_fork = i;
-			data->philo[i].right_fork = (i + 1) % data->n_of_philo;
-		}
-		data->philo[i].start = timer();
-		data->philo[i].d_philo = data;
-		pthread_create(&data->philo[i].th, NULL, &diner, &data->philo[i]);
-		i++;
-		ft_usleep(60);
-	}
-	while (i < data->n_of_philo)
-	{
-		pthread_join(data->philo[i].th, NULL);
-		i++;
-	}
-}
-
 int	timing(t_data *data)
 {
 	int	i;
@@ -116,28 +84,66 @@ int	its_time_to_die(t_philo philo)
 	return (1);
 }
 
-void	the_tabel(t_data *data)
+
+void	*monitor(void *d)
 {
 	int	i;
 
-
-	init_philo2(data);
 	i = 0;
+	t_data	*data;
+	data = (t_data *)d;
 	while (1)
 	{
 		if (data->n_of_meals != -1 && timing(data) == 0)
-			return ;
+			return NULL;
 		if (!its_time_to_die(data->philo[i]))
 		{
 			pthread_mutex_lock(data->msg);
 			printf("%ld philo %d died\n", \
 				timer() - data->start_time, data->philo[i].id);
 			pthread_mutex_unlock(data->msg);
-			return ;
+			exit (1);
+			return NULL;
 		}
 		i++;
 		if (i == data->n_of_philo)
 			i = 0;
+	}
+}
+
+void	init_philo2(t_data *data)
+{
+	int	i;
+	pthread_t monitor_thread;
+
+	i = 0;
+	data->start_time = timer();
+	while (i < data->n_of_philo)
+	{
+		data->philo[i].id = i + 1;
+		if (i == data->n_of_philo - 1)
+		{
+			data->philo[i].right_fork = i;
+			data->philo[i].left_fork = (i + 1) % data->n_of_philo;
+		}
+		else
+		{
+			data->philo[i].left_fork = i;
+			data->philo[i].right_fork = (i + 1) % data->n_of_philo;
+		}
+		data->philo[i].start = timer();
+		data->philo[i].d_philo = data;
+		pthread_create(&data->philo[i].th, NULL, &diner, &data->philo[i]);
+		i++;
+		usleep(60);
+	}
+	pthread_create(&monitor_thread, NULL, &monitor, data);
+    pthread_join(monitor_thread, NULL);
+	i = 0;
+	while (i < data->n_of_philo)
+	{
+    	pthread_join(data->philo[i].th, NULL);
+    	i++;
 	}
 }
 
@@ -157,7 +163,7 @@ void	init_philo(t_data *data)
 		pthread_mutex_init(&data->forks[i], NULL);
 		i++;
 	}
-	the_tabel(data);
+	init_philo2(data);
 	i = 0;
 	while (i < data->n_of_philo)
 	{

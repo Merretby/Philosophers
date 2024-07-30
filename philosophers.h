@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philosophers.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: moer-ret <moer-ret@student.42.fr>          +#+  +:+       +#+        */
+/*   By: user <user@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 20:38:54 by moer-ret          #+#    #+#             */
-/*   Updated: 2024/07/29 16:51:15 by moer-ret         ###   ########.fr       */
+/*   Updated: 2024/07/30 13:15:08 by user             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ typedef struct s_data
 	int				time_to_sleep;
 	int				n_of_meals;
 	long int		start_time;
+	int				dead;
 	t_philo			*philo;
 	pthread_mutex_t	*forks;
 	pthread_mutex_t	*msg;

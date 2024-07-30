@@ -6,7 +6,7 @@
 /*   By: user <user@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/20 18:19:25 by moer-ret          #+#    #+#             */
-/*   Updated: 2024/07/30 12:53:22 by user             ###   ########.fr       */
+/*   Updated: 2024/07/30 14:40:25 by user             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,8 @@ void	*diner(void *data_of_philo)
 		usleep(60);
 	while (1)
 	{
+		if (philo->d_philo->dead == 1)
+			return (NULL);
 		take_fork_and_eat(philo);
 		pthread_mutex_unlock(&philo->d_philo->forks[philo->left_fork]);
 		pthread_mutex_unlock(&philo->d_philo->forks[philo->right_fork]);
@@ -102,7 +104,7 @@ void	*monitor(void *d)
 			printf("%ld philo %d died\n", \
 				timer() - data->start_time, data->philo[i].id);
 			pthread_mutex_unlock(data->msg);
-			exit (1);
+			data->dead = 1;
 			return NULL;
 		}
 		i++;
@@ -135,10 +137,12 @@ void	init_philo2(t_data *data)
 		data->philo[i].d_philo = data;
 		pthread_create(&data->philo[i].th, NULL, &diner, &data->philo[i]);
 		i++;
-		usleep(60);
+		ft_usleep(60);
 	}
 	pthread_create(&monitor_thread, NULL, &monitor, data);
     pthread_join(monitor_thread, NULL);
+	if (data->dead == 1)
+		return ;
 	i = 0;
 	while (i < data->n_of_philo)
 	{
@@ -195,6 +199,7 @@ void	init_data(int ac, char **av, t_data *data)
 	else
 		data->n_of_meals = -1;
 	data->stop = 0;
+	data->dead = 0;
 	if (data->n_of_philo == 1)
 	{
 		printf("0 philo 1 has taken a fork\n");

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: moer-ret <moer-ret@student.42.fr>          +#+  +:+       +#+        */
+/*   By: user <user@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/20 18:19:25 by moer-ret          #+#    #+#             */
-/*   Updated: 2024/07/31 11:42:36 by moer-ret         ###   ########.fr       */
+/*   Updated: 2024/07/31 16:59:10 by user             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,8 +64,15 @@ void	*diner(void *data_of_philo)
 	t_philo	*philo;
 
 	philo = (t_philo *)data_of_philo;
-	while (philo->d_philo->dead == 0)
+	while (1)
 	{
+		pthread_mutex_lock(philo->d_philo->dead_mutex);
+		if (philo->d_philo->dead == 1)
+		{
+			pthread_mutex_unlock(philo->d_philo->dead_mutex);
+			return NULL;
+		}
+		pthread_mutex_unlock(philo->d_philo->dead_mutex);
 		if (philo->id % 2 == 0)
 			take_fork_and_eat(philo);
 		else
@@ -109,15 +116,22 @@ void	*the_tabel(void *d)
 	while (1)
 	{
 		if (data->n_of_meals != -1 && timing(data) == 0)
+		{
+			pthread_mutex_lock(data->msg);
+			pthread_mutex_lock(data->dead_mutex);
+			data->dead = 1;
+			pthread_mutex_unlock(data->dead_mutex);
+			pthread_mutex_unlock(data->msg);
 			return NULL;
+		}
 		if (!its_time_to_die(data->philo[i]))
 		{
 			pthread_mutex_lock(data->msg);
 			printf("%ld philo %d died\n", \
 				timer() - data->start_time, data->philo[i].id);
-			pthread_mutex_lock(&data->dead_mutex);
+			pthread_mutex_lock(data->dead_mutex);
 			data->dead = 1;
-			pthread_mutex_unlock(&data->dead_mutex);
+			pthread_mutex_unlock(data->dead_mutex);
 			pthread_mutex_unlock(data->msg);
 			return NULL;
 		}
@@ -175,7 +189,8 @@ void	init_philo(t_data *data)
 	data->forks = malloc(sizeof(pthread_mutex_t) * data->n_of_philo);
 	data->msg = malloc(sizeof(pthread_mutex_t));
 	data->tour = malloc(sizeof(pthread_mutex_t));
-	pthread_mutex_init(&data->dead_mutex, NULL);
+	data->dead_mutex = malloc(sizeof(pthread_mutex_t));
+	pthread_mutex_init(data->dead_mutex, NULL);
 	pthread_mutex_init(data->msg, NULL);
 	pthread_mutex_init(data->tour, NULL);
 	while (i < data->n_of_philo)
@@ -190,7 +205,7 @@ void	init_philo(t_data *data)
 		pthread_mutex_destroy(&data->forks[i]);
 		i++;
 	}
-	pthread_mutex_init(&data->dead_mutex, NULL);
+	pthread_mutex_destroy(data->dead_mutex);
 	pthread_mutex_destroy(data->msg);
 	pthread_mutex_destroy(data->tour);
 	free(data->philo);

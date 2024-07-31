@@ -6,7 +6,7 @@
 /*   By: moer-ret <moer-ret@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 20:38:54 by moer-ret          #+#    #+#             */
-/*   Updated: 2024/07/30 17:26:34 by moer-ret         ###   ########.fr       */
+/*   Updated: 2024/07/31 11:43:11 by moer-ret         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ typedef struct s_data
 	long int		start_time;
 	int				dead;
 	t_philo			*philo;
+	pthread_mutex_t	dead_mutex;
 	pthread_mutex_t	*forks;
 	pthread_mutex_t	*msg;
 	pthread_mutex_t	*tour;

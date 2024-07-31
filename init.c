@@ -6,7 +6,7 @@
 /*   By: moer-ret <moer-ret@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/20 18:19:25 by moer-ret          #+#    #+#             */
-/*   Updated: 2024/07/30 19:24:22 by moer-ret         ###   ########.fr       */
+/*   Updated: 2024/07/31 11:42:36 by moer-ret         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,7 +115,9 @@ void	*the_tabel(void *d)
 			pthread_mutex_lock(data->msg);
 			printf("%ld philo %d died\n", \
 				timer() - data->start_time, data->philo[i].id);
+			pthread_mutex_lock(&data->dead_mutex);
 			data->dead = 1;
+			pthread_mutex_unlock(&data->dead_mutex);
 			pthread_mutex_unlock(data->msg);
 			return NULL;
 		}
@@ -129,8 +131,8 @@ void	*the_tabel(void *d)
 void	init_philo2(t_data *data)
 {
 	int	i;
-
 	pthread_t 		mounitor;
+
 	i = 0;
 	data->start_time = timer();
 	while (i < data->n_of_philo)
@@ -173,6 +175,7 @@ void	init_philo(t_data *data)
 	data->forks = malloc(sizeof(pthread_mutex_t) * data->n_of_philo);
 	data->msg = malloc(sizeof(pthread_mutex_t));
 	data->tour = malloc(sizeof(pthread_mutex_t));
+	pthread_mutex_init(&data->dead_mutex, NULL);
 	pthread_mutex_init(data->msg, NULL);
 	pthread_mutex_init(data->tour, NULL);
 	while (i < data->n_of_philo)
@@ -187,6 +190,7 @@ void	init_philo(t_data *data)
 		pthread_mutex_destroy(&data->forks[i]);
 		i++;
 	}
+	pthread_mutex_init(&data->dead_mutex, NULL);
 	pthread_mutex_destroy(data->msg);
 	pthread_mutex_destroy(data->tour);
 	free(data->philo);

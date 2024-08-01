@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philosophers.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: user <user@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: moer-ret <moer-ret@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 20:38:54 by moer-ret          #+#    #+#             */
-/*   Updated: 2024/07/31 16:47:21 by user             ###   ########.fr       */
+/*   Updated: 2024/08/01 13:34:07 by moer-ret         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,10 +53,18 @@ typedef struct s_data
 long		ft_atoi(const char *str);
 void		ft_putendl_fd(char *s, int fd);
 void		parsing(int ac, char **av);
+int			ft_isdigit(int c);
 
-//init
+//philo
 void		init_data(int ac, char **av, t_data *data);
+void		*the_tabel(void *d);
+void		*diner(void *data_of_philo);
+void		help_philo(t_data *data);
 long int	timer(void);
 void		ft_usleep(int time);
+void		desrtoy(t_data *data);
+int			timing(t_data *data);
+int			its_time_to_die(t_philo philo);
+void		ft_print(t_philo *philo, char *s);
 
 #endif

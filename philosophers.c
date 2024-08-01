@@ -6,7 +6,7 @@
 /*   By: moer-ret <moer-ret@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 20:34:35 by moer-ret          #+#    #+#             */
-/*   Updated: 2024/07/31 11:07:29 by moer-ret         ###   ########.fr       */
+/*   Updated: 2024/08/01 13:18:29 by moer-ret         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,17 @@ void	ft_usleep(int time)
 	t = timer();
 	while (timer() - t < time)
 		usleep(60);
+}
+
+void	desrtoy(t_data *data)
+{
+	pthread_mutex_destroy(data->dead_mutex);
+	pthread_mutex_destroy(data->msg);
+	pthread_mutex_destroy(data->tour);
+	free(data->philo);
+	free(data->forks);
+	free(data->msg);
+	free(data->tour);
 }
 
 int	main(int ac, char **av)

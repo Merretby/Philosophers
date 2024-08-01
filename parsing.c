@@ -6,19 +6,11 @@
 /*   By: moer-ret <moer-ret@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/15 18:43:57 by moer-ret          #+#    #+#             */
-/*   Updated: 2024/07/27 12:25:21 by moer-ret         ###   ########.fr       */
+/*   Updated: 2024/08/01 13:23:51 by moer-ret         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
-
-int	ft_isdigit(int c)
-{
-	if ((c >= '0' && c <= '9'))
-		return (1);
-	else
-		return (0);
-}
 
 long	ft_atoi(const char *str)
 {

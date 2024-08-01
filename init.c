@@ -3,112 +3,30 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: user <user@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: moer-ret <moer-ret@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/20 18:19:25 by moer-ret          #+#    #+#             */
-/*   Updated: 2024/07/31 16:59:10 by user             ###   ########.fr       */
+/*   Updated: 2024/08/01 13:33:18 by moer-ret         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-void	ft_print(t_philo *philo, char *s)
+static void	breaker(t_data *data, int flag, int i)
 {
-	pthread_mutex_lock(philo->d_philo->msg);
-	if (philo->d_philo->dead == 1)
-	{
-		pthread_mutex_unlock(philo->d_philo->msg);
-		return ;
-	}
-	printf("%ld philo %d %s\n", timer() - philo->d_philo->start_time, philo->id, s);
-	pthread_mutex_unlock(philo->d_philo->msg);
-}
-
-void	take_fork_and_eat(t_philo *philo)
-{
-	pthread_mutex_lock(&philo->d_philo->forks[philo->left_fork]);
-	ft_print(philo, "has taken a fork");
-	pthread_mutex_lock(&philo->d_philo->forks[philo->right_fork]);
-	ft_print(philo, "has taken a fork");
-	ft_print(philo, "is eating");
-	philo->tmp = timer() - philo->d_philo->start_time;
-	pthread_mutex_lock(philo->d_philo->tour);
-	if (philo->d_philo->n_of_meals != -1)
-		philo->d_philo->stop += 1;
-	pthread_mutex_unlock(philo->d_philo->tour);
-	ft_usleep(philo->d_philo->time_to_eat);
-	pthread_mutex_unlock(&philo->d_philo->forks[philo->left_fork]);
-	pthread_mutex_unlock(&philo->d_philo->forks[philo->right_fork]);
-}
-
-void	take_fork_and_eat_odd(t_philo *philo)
-{
-	usleep(500);
-	pthread_mutex_lock(&philo->d_philo->forks[philo->right_fork]);
-	ft_print(philo, "has taken a fork");
-	pthread_mutex_lock(&philo->d_philo->forks[philo->left_fork]);
-	ft_print(philo, "has taken a fork");
-	ft_print(philo, "is eating");
-	philo->tmp = timer() - philo->d_philo->start_time;
-	pthread_mutex_lock(philo->d_philo->tour);
-	if (philo->d_philo->n_of_meals != -1)
-		philo->d_philo->stop += 1;
-	pthread_mutex_unlock(philo->d_philo->tour);
-	ft_usleep(philo->d_philo->time_to_eat);
-	pthread_mutex_unlock(&philo->d_philo->forks[philo->right_fork]);
-	pthread_mutex_unlock(&philo->d_philo->forks[philo->left_fork]);
-}
-
-void	*diner(void *data_of_philo)
-{
-	t_philo	*philo;
-
-	philo = (t_philo *)data_of_philo;
-	while (1)
-	{
-		pthread_mutex_lock(philo->d_philo->dead_mutex);
-		if (philo->d_philo->dead == 1)
-		{
-			pthread_mutex_unlock(philo->d_philo->dead_mutex);
-			return NULL;
-		}
-		pthread_mutex_unlock(philo->d_philo->dead_mutex);
-		if (philo->id % 2 == 0)
-			take_fork_and_eat(philo);
-		else
-			take_fork_and_eat_odd(philo);
-		ft_print(philo, "is sleeping");
-		ft_usleep(philo->d_philo->time_to_sleep);
-		ft_print(philo, "is thinking");
-	}
-	return (NULL);
-}
-
-int	timing(t_data *data)
-{
-	int	i;
-
-	i = 0;
-	pthread_mutex_lock(data->tour);
-	if (data->stop / data->n_of_meals == data->n_of_philo)
-		i = 1;
-	pthread_mutex_unlock(data->tour);
-	if (i == 1)
-		return (0);
-	return (1);
-}
-
-int	its_time_to_die(t_philo philo)
-{
-	if (((timer() - philo.d_philo->start_time) - philo.tmp) \
-		>= philo.d_philo->time_to_die)
-		return (0);
-	return (1);
+	pthread_mutex_lock(data->msg);
+	if (flag == 1)
+		printf("%ld philo %d has died\n", \
+			timer() - data->start_time, data->philo[i].id);
+	pthread_mutex_lock(data->dead_mutex);
+	data->dead = 1;
+	pthread_mutex_unlock(data->dead_mutex);
+	pthread_mutex_unlock(data->msg);
 }
 
 void	*the_tabel(void *d)
 {
-	int	i;
+	int		i;
 	t_data	*data;
 
 	data = (t_data *)d;
@@ -117,23 +35,13 @@ void	*the_tabel(void *d)
 	{
 		if (data->n_of_meals != -1 && timing(data) == 0)
 		{
-			pthread_mutex_lock(data->msg);
-			pthread_mutex_lock(data->dead_mutex);
-			data->dead = 1;
-			pthread_mutex_unlock(data->dead_mutex);
-			pthread_mutex_unlock(data->msg);
-			return NULL;
+			breaker(data, 0, i);
+			return (NULL);
 		}
 		if (!its_time_to_die(data->philo[i]))
 		{
-			pthread_mutex_lock(data->msg);
-			printf("%ld philo %d died\n", \
-				timer() - data->start_time, data->philo[i].id);
-			pthread_mutex_lock(data->dead_mutex);
-			data->dead = 1;
-			pthread_mutex_unlock(data->dead_mutex);
-			pthread_mutex_unlock(data->msg);
-			return NULL;
+			breaker(data, 1, i);
+			return (NULL);
 		}
 		i++;
 		if (i == data->n_of_philo)
@@ -144,8 +52,7 @@ void	*the_tabel(void *d)
 
 void	init_philo2(t_data *data)
 {
-	int	i;
-	pthread_t 		mounitor;
+	int			i;
 
 	i = 0;
 	data->start_time = timer();
@@ -164,20 +71,11 @@ void	init_philo2(t_data *data)
 		}
 		data->philo[i].start = timer();
 		data->philo[i].d_philo = data;
-		pthread_create(&data->philo[i].th, NULL, &diner, &data->philo[i]);\
+		pthread_create(&data->philo[i].th, NULL, &diner, &data->philo[i]);
 		i++;
 		usleep(60);
 	}
-	pthread_create(&mounitor, NULL, &the_tabel, data);
-	i = 0;
-	while (i < data->n_of_philo)
-	{
-		if (pthread_join(data->philo[i].th, NULL) == -1)
-			ft_putendl_fd("error in pthread_join", 2);
-		i++;
-	}
-	if (pthread_join(mounitor, NULL) == -1)
-		ft_putendl_fd("error in pthread_join", 2);
+	help_philo(data);
 }
 
 void	init_philo(t_data *data)
@@ -205,13 +103,7 @@ void	init_philo(t_data *data)
 		pthread_mutex_destroy(&data->forks[i]);
 		i++;
 	}
-	pthread_mutex_destroy(data->dead_mutex);
-	pthread_mutex_destroy(data->msg);
-	pthread_mutex_destroy(data->tour);
-	free(data->philo);
-	free(data->forks);
-	free(data->msg);
-	free(data->tour);
+	desrtoy(data);
 }
 
 void	init_data(int ac, char **av, t_data *data)

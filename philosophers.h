@@ -6,7 +6,7 @@
 /*   By: moer-ret <moer-ret@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 20:38:54 by moer-ret          #+#    #+#             */
-/*   Updated: 2024/08/01 13:34:07 by moer-ret         ###   ########.fr       */
+/*   Updated: 2024/08/06 18:02:25 by moer-ret         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,6 @@ void		ft_usleep(int time);
 void		desrtoy(t_data *data);
 int			timing(t_data *data);
 int			its_time_to_die(t_philo philo);
-void		ft_print(t_philo *philo, char *s);
+void		ft_print(t_philo *philo, char *s, int flag);
 
 #endif

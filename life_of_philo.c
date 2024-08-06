@@ -6,7 +6,7 @@
 /*   By: moer-ret <moer-ret@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 13:23:08 by moer-ret          #+#    #+#             */
-/*   Updated: 2024/08/01 13:30:30 by moer-ret         ###   ########.fr       */
+/*   Updated: 2024/08/06 16:55:32 by moer-ret         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,10 +32,10 @@ void	help_philo(t_data *data)
 static void	take_fork_and_eat(t_philo *philo)
 {
 	pthread_mutex_lock(&philo->d_philo->forks[philo->left_fork]);
-	ft_print(philo, "has taken a fork");
+	ft_print(philo, "has taken a fork", 0);
 	pthread_mutex_lock(&philo->d_philo->forks[philo->right_fork]);
-	ft_print(philo, "has taken a fork");
-	ft_print(philo, "is eating");
+	ft_print(philo, "has taken a fork", 0);
+	ft_print(philo, "is eating", 0);
 	philo->tmp = timer() - philo->d_philo->start_time;
 	pthread_mutex_lock(philo->d_philo->tour);
 	if (philo->d_philo->n_of_meals != -1)
@@ -49,19 +49,19 @@ static void	take_fork_and_eat(t_philo *philo)
 static void	take_fork_and_eat_odd(t_philo *philo)
 {
 	usleep(500);
-	pthread_mutex_lock(&philo->d_philo->forks[philo->right_fork]);
-	ft_print(philo, "has taken a fork");
 	pthread_mutex_lock(&philo->d_philo->forks[philo->left_fork]);
-	ft_print(philo, "has taken a fork");
-	ft_print(philo, "is eating");
+	ft_print(philo, "has taken a fork", 0);
+	pthread_mutex_lock(&philo->d_philo->forks[philo->right_fork]);
+	ft_print(philo, "has taken a fork", 0);
+	ft_print(philo, "is eating", 0);
 	philo->tmp = timer() - philo->d_philo->start_time;
 	pthread_mutex_lock(philo->d_philo->tour);
 	if (philo->d_philo->n_of_meals != -1)
 		philo->d_philo->stop += 1;
 	pthread_mutex_unlock(philo->d_philo->tour);
 	ft_usleep(philo->d_philo->time_to_eat);
-	pthread_mutex_unlock(&philo->d_philo->forks[philo->right_fork]);
 	pthread_mutex_unlock(&philo->d_philo->forks[philo->left_fork]);
+	pthread_mutex_unlock(&philo->d_philo->forks[philo->right_fork]);
 }
 
 void	*diner(void *data_of_philo)
@@ -82,9 +82,9 @@ void	*diner(void *data_of_philo)
 			take_fork_and_eat(philo);
 		else
 			take_fork_and_eat_odd(philo);
-		ft_print(philo, "is sleeping");
+		ft_print(philo, "is sleeping", 0);
 		ft_usleep(philo->d_philo->time_to_sleep);
-		ft_print(philo, "is thinking");
+		ft_print(philo, "is thinking", 1);
 	}
 	return (NULL);
 }

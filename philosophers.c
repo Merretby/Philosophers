@@ -6,7 +6,7 @@
 /*   By: moer-ret <moer-ret@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 20:34:35 by moer-ret          #+#    #+#             */
-/*   Updated: 2024/08/01 13:18:29 by moer-ret         ###   ########.fr       */
+/*   Updated: 2024/08/04 09:54:06 by moer-ret         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ void	desrtoy(t_data *data)
 	free(data->philo);
 	free(data->forks);
 	free(data->msg);
+	free(data->dead_mutex);
 	free(data->tour);
 }
 

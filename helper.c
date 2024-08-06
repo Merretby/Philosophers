@@ -6,7 +6,7 @@
 /*   By: moer-ret <moer-ret@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 13:19:56 by moer-ret          #+#    #+#             */
-/*   Updated: 2024/08/01 13:23:54 by moer-ret         ###   ########.fr       */
+/*   Updated: 2024/08/04 23:19:41 by moer-ret         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int	ft_isdigit(int c)
 		return (0);
 }
 
-void	ft_print(t_philo *philo, char *s)
+void	ft_print(t_philo *philo, char *s, int flag)
 {
 	pthread_mutex_lock(philo->d_philo->msg);
 	if (philo->d_philo->dead == 1)
@@ -31,6 +31,11 @@ void	ft_print(t_philo *philo, char *s)
 	printf("%ld philo %d %s\n", \
 		timer() - philo->d_philo->start_time, philo->id, s);
 	pthread_mutex_unlock(philo->d_philo->msg);
+	if (flag == 1)
+	{
+		if (philo->d_philo->time_to_eat <= philo->d_philo->time_to_sleep)
+				usleep(60);
+	}
 }
 
 int	timing(t_data *data)

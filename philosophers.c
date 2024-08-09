@@ -6,7 +6,7 @@
 /*   By: moer-ret <moer-ret@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 20:34:35 by moer-ret          #+#    #+#             */
-/*   Updated: 2024/08/04 09:54:06 by moer-ret         ###   ########.fr       */
+/*   Updated: 2024/08/09 18:08:11 by moer-ret         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,8 +48,8 @@ int	main(int ac, char **av)
 {
 	t_data	*data;
 
-	data = malloc(sizeof(t_data));
 	parsing(ac, av);
+	data = malloc(sizeof(t_data));
 	init_data(ac, av, data);
 	free(data);
 	data = NULL;

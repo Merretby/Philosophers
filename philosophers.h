@@ -6,7 +6,7 @@
 /*   By: moer-ret <moer-ret@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 20:38:54 by moer-ret          #+#    #+#             */
-/*   Updated: 2024/08/09 14:37:43 by moer-ret         ###   ########.fr       */
+/*   Updated: 2024/08/11 14:54:47 by moer-ret         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,12 +51,12 @@ typedef struct s_data
 
 //parsing
 long		ft_atoi(const char *str);
-void		ft_putendl_fd(char *s, int fd);
-void		parsing(int ac, char **av);
+int			ft_putendl_fd(char *s, int fd);
+int			parsing(int ac, char **av);
 int			ft_isdigit(int c);
 
 //philo
-void		init_data(int ac, char **av, t_data *data);
+int			init_data(int ac, char **av, t_data *data);
 void		*the_tabel(void *d);
 void		*diner(void *data_of_philo);
 void		help_philo(t_data *data);

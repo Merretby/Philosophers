@@ -6,7 +6,7 @@
 /*   By: moer-ret <moer-ret@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/15 18:43:57 by moer-ret          #+#    #+#             */
-/*   Updated: 2024/08/01 13:23:51 by moer-ret         ###   ########.fr       */
+/*   Updated: 2024/08/11 12:40:51 by moer-ret         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ int	ft_num(char *s)
 	return (1);
 }
 
-void	ft_putendl_fd(char *s, int fd)
+int	ft_putendl_fd(char *s, int fd)
 {
 	int	i;
 
@@ -71,7 +71,7 @@ void	ft_putendl_fd(char *s, int fd)
 		}
 		write(fd, "\n", 1);
 	}
-	exit (1);
+	return (1);
 }
 
 int	check_speac(char *str)
@@ -88,20 +88,23 @@ int	check_speac(char *str)
 	return (1);
 }
 
-void	parsing(int ac, char **av)
+int	parsing(int ac, char **av)
 {
 	long	nb;
 	int		i;
 
 	i = 1;
 	if (ac != 5 && ac != 6)
-		ft_putendl_fd("U NEDD 5 or 6 ARGUMENT", 2);
+		if (ft_putendl_fd("U NEDD 5 or 6 ARGUMENT", 2) == 1)
+			return (0);
 	while (av[i])
 	{
 		nb = ft_atoi(av[i]);
 		if (nb > INT_MAX || !ft_num(av[i]) \
 			|| check_speac(av[i]))
-			ft_putendl_fd("ERROR", 2);
+			if (ft_putendl_fd("ERROR", 2) == 1)
+				return (0);
 		i++;
 	}
+	return (1);
 }

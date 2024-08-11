@@ -6,7 +6,7 @@
 /*   By: moer-ret <moer-ret@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 20:34:35 by moer-ret          #+#    #+#             */
-/*   Updated: 2024/08/09 18:08:11 by moer-ret         ###   ########.fr       */
+/*   Updated: 2024/08/11 14:54:43 by moer-ret         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,10 +48,12 @@ int	main(int ac, char **av)
 {
 	t_data	*data;
 
-	parsing(ac, av);
-	data = malloc(sizeof(t_data));
-	init_data(ac, av, data);
-	free(data);
-	data = NULL;
+	if (parsing(ac, av) == 1)
+	{
+		data = malloc(sizeof(t_data));
+		init_data(ac, av, data);
+		free(data);
+		data = NULL;
+	}
 	return (0);
 }

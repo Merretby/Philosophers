@@ -6,7 +6,7 @@
 /*   By: moer-ret <moer-ret@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/20 18:19:25 by moer-ret          #+#    #+#             */
-/*   Updated: 2024/08/09 14:42:34 by moer-ret         ###   ########.fr       */
+/*   Updated: 2024/08/11 14:54:39 by moer-ret         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ static void	breaker(t_data *data, int flag, int i)
 {
 	pthread_mutex_lock(data->msg);
 	if (flag == 1)
-		printf("%ld philo %d has died\n", \
+		printf("%ld %d died\n", \
 			timer() - data->start_time, data->philo[i].id);
 	pthread_mutex_lock(data->dead_mutex);
 	data->dead = 1;
@@ -70,6 +70,7 @@ void	init_philo2(t_data *data)
 			data->philo[i].right_fork = (i + 1) % data->n_of_philo;
 		}
 		data->philo[i].start = timer();
+		data->philo[i].tmp = 0;
 		data->philo[i].d_philo = data;
 		pthread_create(&data->philo[i].th, NULL, &diner, &data->philo[i]);
 		i++;
@@ -106,11 +107,11 @@ void	init_philo(t_data *data)
 	desrtoy(data);
 }
 
-void	init_data(int ac, char **av, t_data *data)
+int	init_data(int ac, char **av, t_data *data)
 {
 	data->n_of_philo = ft_atoi(av[1]);
 	if (data->n_of_philo == 0)
-		ft_putendl_fd("number of philosophers must be greater than 0", 2);
+		return (ft_putendl_fd("number of philosophers must be greater than 0", 2));
 	data->time_to_die = ft_atoi(av[2]);
 	data->time_to_eat = ft_atoi(av[3]);
 	data->time_to_sleep = ft_atoi(av[4]);
@@ -118,7 +119,7 @@ void	init_data(int ac, char **av, t_data *data)
 	{
 		data->n_of_meals = ft_atoi(av[5]);
 		if (data->n_of_meals == 0)
-			ft_putendl_fd("number of meals must be greater than 0", 2);
+			return(ft_putendl_fd("number of meals must be greater than 0", 2));
 	}
 	else
 		data->n_of_meals = -1;
@@ -129,7 +130,8 @@ void	init_data(int ac, char **av, t_data *data)
 		printf("0 philo 1 has taken a fork\n");
 		ft_usleep(data->time_to_die);
 		printf("%d philo 1 died\n", ++data->time_to_die);
-		return ;
+		return 1;
 	}
 	init_philo(data);
+	return (0);
 }
